@@ -17,37 +17,28 @@ npm run build
 
 This outputs static files to the `dist/` folder.
 
-## Deploy to BigRock (cPanel/Apache hosting)
+## Deploy to GitHub Pages
 
-1. Build locally: `npm run build`.
-2. Upload the contents of `dist/` to your hosting root (usually `public_html/` for your main domain).
-3. Ensure this file exists at `public_html/.htaccess` and contains SPA rewrites:
+1. Push your code to GitHub.
+2. The workflow `.github/workflows/gh-pages.yml` will build and deploy your site to the `gh-pages` branch automatically on every push to `main`.
+3. A `CNAME` file is added so your site will be served at `https://psypsypsy.in`.
 
-```
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ index.html [L]
-</IfModule>
-```
+## DNS setup for custom domain
 
-4. If your site is in a subfolder (e.g., `public_html/app/`), update your Vite base path in `vite.config.ts` as needed:
+In your BigRock DNS panel:
 
-```ts
-export default defineConfig({
-  base: '/', // or '/app/' if deployed under a subfolder
-  plugins: [react()],
-});
-```
+- Add a CNAME record:
+  - Name: `www`
+  - Value: `psypsypsy.in`
+- Add A records for apex domain (psypsypsy.in) pointing to GitHub Pages IPs:
+  - 185.199.108.153
+  - 185.199.109.153
+  - 185.199.110.153
+  - 185.199.111.153
 
-5. Clear any server/site cache from cPanel if changes don’t appear immediately.
+## Vite base path
 
-## Domain: psypsypsy.in
-
-- Point your domain to the hosting where you upload `dist/` (BigRock). If using BigRock DNS, set the A record to the hosting IP (from your cPanel) and ensure `www` CNAME points to `psypsypsy.in`.
-- Use their SSL (AutoSSL/Let’s Encrypt) to enable HTTPS.
+If you deploy to a subfolder, set `base` in `vite.config.ts` accordingly. For root domain, default is fine.
 
 ## Instagram Link
 
